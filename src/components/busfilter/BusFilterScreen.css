@@ -1,4 +1,82 @@
-.titlePage {
-    align-items: center;
-    background-color: yellow;
+.filterContainer{
+    background-color: #f2f2f2;
 }
+.titlePage {
+    display: flex;
+    background-color: white;
+    align-items: center;
+    padding: 5px;
+  }
+  
+  .titlePage h1 {
+    flex: 1;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left; 
+  }
+  
+  .filterSection {
+    padding: 20px;
+  }
+  
+  .filterTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
+  .timeOptions, .busCompanies, .busTypes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .timeOption, .companyOption, .typeOption {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .priceRange {
+    display: flex;
+    height: 70px;
+    border-radius: 5px;
+    background-color: white;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .priceSlider {
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  .footerButtons {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .clearButton, .applyButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .clearButton {
+    background-color: #ccc;
+  }
+  
+  .applyButton {
+    background-color: #007bff;
+    color: #fff;
+  }
