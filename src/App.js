@@ -1,5 +1,5 @@
 import "./App.css";
-import BusFilterScreen from "./components/busfilter/BusFilterScreen.tsx";
+import BusFilterScreen from "./components/busFilter/BusFilterScreen.tsx";
 
 function App() {
   return (
