@@ -1,8 +1,41 @@
-import React from "react";
-import "./BusFilterScreen.css";
+import React, { useState } from "react";
+import "./bus-filter-screen.css";
 import ic_close from "../../assets/svgs/ic_close.svg";
-import busList from "../../data/listBus.ts";
+import bus from "../../assets/svgs/bus.svg";
+import busList from "../../constant/BusCompanyList.ts";
+import busTypeList from "../../constant/BusTypeList.ts";
+import timeList from "../../constant/TimeList.ts";
+
 const BusFilterScreen = () => {
+  const [selectedTime, setSelectedTime] = useState<string[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [selectedBusTypes, setSelectedBusTypes] = useState<string[]>([]);
+
+  const handleTimeCheckboxChange = (timeBus) => {
+    setSelectedTime((prev) =>
+      prev.includes(timeBus)
+        ? prev.filter((item) => item !== timeBus)
+        : [...prev, timeBus]
+    );
+    console.log(timeBus);
+  };
+
+  const handleCompanyCheckboxChange = (company: string) => {
+    setSelectedCompanies((prev) =>
+      prev.includes(company)
+        ? prev.filter((item) => item !== company)
+        : [...prev, company]
+    );
+  };
+
+  const handleBusTypeCheckboxChange = (busType: string) => {
+    setSelectedBusTypes((prev) =>
+      prev.includes(busType)
+        ? prev.filter((item) => item !== busType)
+        : [...prev, busType]
+    );
+  };
+
   return (
     <div className="filterContainer">
       <div className="titlePage">
@@ -12,30 +45,41 @@ const BusFilterScreen = () => {
       <div className="filterSection">
         <div className="filterTitle">Thời gian khởi hành</div>
         <div className="timeOptions">
-          <div className="timeOption">
-            Sáng sớm <br /> 00:00 - 06:00
-          </div>
-          <div className="timeOption">
-            Buổi sáng <br /> 06:01 - 12:00
-          </div>
-          <div className="timeOption">
-            Buổi trưa <br /> 12:01 - 18:00
-          </div>
-          <div className="timeOption">
-            Buổi tối <br /> 18:01 - 23:59
-          </div>
+          {timeList.map((timeList, index) => {
+            return (
+              <label
+                className={`timeOption ${
+                  selectedTime.includes(timeList.time) ? "selectedTime" : ""
+                }`}
+                key={index}
+              >
+                {timeList.titleTime} <br /> {timeList.time}
+                <input
+                  type="checkbox"
+                  checked={selectedTime.includes(timeList.time)}
+                  onChange={() => handleTimeCheckboxChange(timeList.time)}
+                />
+              </label>
+            );
+          })}
         </div>
-
-        <div className="filterTitle">Khoảng giá</div>
+        <div className="price">
+          <span className="filterTitle">Khoảng giá</span>
+          <span className="titlePrice">0 - 3.000.000đ/vé</span>
+        </div>
         <div className="priceRange">
-          <span>100.000 đ</span>
-          <input
-            type="range"
-            min="100000"
-            max="900000"
-            className="priceSlider"
-          />
-          <span>900.000 đ</span>
+          <div className="sliderContainer">
+            <input
+              type="range"
+              min="100000"
+              max="900000"
+              className="priceSlider"
+            />
+          </div>
+          <div className="priceLabels">
+            <span>100.000 đ</span>
+            <span>900.000 đ</span>
+          </div>
         </div>
 
         <div className="filterTitle">Nhà xe</div>
@@ -44,34 +88,55 @@ const BusFilterScreen = () => {
           {busList.map((busList, index) => {
             return (
               <div className="busCompanies">
-                <label className="companyOption" key={index}>
-                  <input type="checkbox" />
+                <label
+                  className={`companyOption ${
+                    selectedCompanies.includes(busList.busName)
+                      ? "selected"
+                      : ""
+                  }`}
+                  key={index}
+                >
+                  <img src={bus} alt="bus" className="imgBus"></img>
                   {busList.busName}
+                  <input
+                    type="checkbox"
+                    checked={selectedCompanies.includes(busList.busName)}
+                    onChange={() =>
+                      handleCompanyCheckboxChange(busList.busName)
+                    }
+                  />
                 </label>
               </div>
             );
           })}
         </ul>
-        {/* <label className="companyOption">
-            <input type="checkbox" />
-            Hà Lan Limousine
-          </label>
-          <label className="companyOption">
-            <input type="checkbox" />
-            Minh Anh
-          </label>
-          <label className="companyOption">
-            <input type="checkbox" />
-            Bảo Phong
-          </label> */}
-        {/* </div> */}
 
         <div className="filterTitle">Loại xe</div>
-        <div className="busTypes">
-          <div className="typeOption">Limousine 9 chỗ</div>
-          <div className="typeOption">Limousine 16 chỗ</div>
-          <div className="typeOption">Limousine 36 chỗ</div>
-        </div>
+        <ul>
+          {busTypeList.map((busTypeList, index) => {
+            return (
+              <div className="busTypes">
+                <label
+                  className={`typeOption ${
+                    selectedBusTypes.includes(busTypeList.seatNum)
+                      ? "selected"
+                      : ""
+                  }`}
+                  key={index}
+                >
+                  {busTypeList.seatNum}
+                  <input
+                    type="checkbox"
+                    checked={selectedBusTypes.includes(busTypeList.seatNum)}
+                    onChange={() =>
+                      handleBusTypeCheckboxChange(busTypeList.seatNum)
+                    }
+                  />
+                </label>
+              </div>
+            );
+          })}
+        </ul>
       </div>
 
       <div className="footerButtons">

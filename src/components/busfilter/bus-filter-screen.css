@@ -1,0 +1,170 @@
+.filterContainer{
+    background-color: #f2f2f2;
+}
+.titlePage {
+    display: flex;
+    background-color: white;
+    align-items: center;
+    padding: 5px;
+  }
+
+  .trip-title{
+    font-weight: bold;
+  }
+  
+  .titlePage h1 {
+    flex: 1;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left; 
+  }
+  
+  .filterSection {
+    padding: 20px;
+  }
+  
+  .price {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+  }
+  
+  .filterTitle {
+    flex: 1;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .titlePrice {
+    margin-left: auto; /* Đẩy "0 - 3.000.000đ/vé" về phía phải */
+  }
+  
+  .timeOptions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .busCompanies, .busTypes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .timeOption {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  .companyOption, .typeOption {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    margin-left: 2px;
+    background-color: white;
+    border: 1px solid #ccc;
+    justify-content: space-between;
+    border-radius: 5px;
+  }
+
+  .companyOption input[type="checkbox"], .typeOption input[type="checkbox"]{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    margin-right: 10px;
+    margin-left: auto;
+  }
+  
+  .companyOption input[type="checkbox"] {
+    background-image: url('../../assets/svgs/ic_select.svg');
+  }
+  
+  .companyOption input[type="checkbox"]:checked {
+    background-image: url('../../assets/svgs/ic_selected.svg');
+  }
+  
+  .typeOption input[type="checkbox"] {
+    background-image: url('../../assets/svgs/ic_select.svg');
+  }
+  
+  .typeOption input[type="checkbox"]:checked {
+    background-image: url('../../assets/svgs/ic_selected.svg');
+  }
+
+  .timeOption input[type="checkbox"] {
+    display: none;
+  }
+  
+  .selected{
+    background-color: #e6e6e6;
+  }
+  .selectedTime{
+    border-color: #0b01c8;
+    border-width: 2px;
+  }
+  
+  .priceRange {
+    display: flex;
+    height: 70px;
+    border-radius: 5px;
+    background-color: white;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-direction: column;
+  }
+
+  .priceRange .priceLabels {
+    display: flex;
+    justify-content: space-between; /* Đẩy các phần tử về hai đầu hàng */
+    width: 90%;
+  }
+  
+  .priceSlider {
+    width: 300px;
+    flex: 1;
+    margin: 19px 1px 1px;
+  }
+  
+  .footerButtons {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .clearButton, .applyButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .clearButton {
+    background-color: #ccc;
+  }
+  
+  .applyButton {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+.imgBus {
+  max-height: 20px;
+  max-width: 20px;
+  
+}
+
+

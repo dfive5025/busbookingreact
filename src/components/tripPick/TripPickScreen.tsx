@@ -1,5 +1,5 @@
 import React from "react";
-import "./TripPickScreen.css";
+import "./trip-pick-screen.css";
 
 const TripPickScreen = () => {
   return (
