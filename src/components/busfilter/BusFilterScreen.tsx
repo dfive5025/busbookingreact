@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import "./bus-filter-screen.css";
 import ic_close from "../../assets/svgs/ic_close.svg";
 import bus from "../../assets/svgs/bus.svg";
-import busList from "../../constant/BusCompanyList.ts";
-import busTypeList from "../../constant/BusTypeList.ts";
-import timeList from "../../constant/TimeList.ts";
+import busList from "../../constants/BusCompanyList.ts";
+import busTypeList from "../../constants/BusTypeList.ts";
+import timeList from "../../constants/TimeList.ts";
+import Slider from "react-slider";
+import { formatNumber } from "../../utils/convertVnd.ts";
+const minPrice = 0;
+const maxPrice = 3000000;
 
 const BusFilterScreen = () => {
   const [selectedTime, setSelectedTime] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedBusTypes, setSelectedBusTypes] = useState<string[]>([]);
+  const [prices, setPrices] = useState([minPrice, maxPrice]);
 
   const handleTimeCheckboxChange = (timeBus) => {
     setSelectedTime((prev) =>
@@ -69,16 +74,24 @@ const BusFilterScreen = () => {
         </div>
         <div className="priceRange">
           <div className="sliderContainer">
-            <input
+            {/* <input
               type="range"
               min="100000"
               max="900000"
               className="priceSlider"
+            /> */}
+            <Slider
+              className={"slider"}
+              value={prices}
+              min={minPrice}
+              step={1000}
+              max={maxPrice}
+              onChange={setPrices}
             />
           </div>
           <div className="priceLabels">
-            <span>100.000 đ</span>
-            <span>900.000 đ</span>
+            <span>{formatNumber(prices[0])}</span>
+            <span>{formatNumber(prices[1])}</span>
           </div>
         </div>
 
