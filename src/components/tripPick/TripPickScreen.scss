@@ -1,0 +1,181 @@
+$backgroundColor: white;
+$bg-element: white;
+.trip-pick-container {
+    background-color: $backgroundColor;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+  .trip-header {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-element;
+    top: 0;
+    position: sticky;
+    z-index: 1000;
+  }
+  
+  .trip-title {
+    flex: 1;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .clear-filter {
+    color: blue;
+    border: none;
+    background: none;
+  }
+  
+  .date-picker {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    background-color: $bg-element;
+  }
+  
+  .date-picker span {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .date-picker .selected {
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .filter-buttons button {
+    flex: 1;
+    margin-right: 5px;
+    padding: 10px;
+    border: #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+  }
+
+
+  
+//   .filter-buttons .filter-button {
+//     background-color: blue;
+//     color: white;
+//   }
+  
+  .trip-list {
+    margin-top: 10px;
+  }
+  
+  .trip-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .trip-time { 
+    display: flex;
+  }
+  .date {
+    flex: 1;
+  }
+  
+  .trip-route {
+    margin: 5px 0;
+    background-color: #f2f2f2;
+    display: flex;
+    border: #ccc;
+    border-radius: 5px;
+    align-items: center;
+  }
+  .trip-route span{
+    margin: 10px;
+    flex:1;
+    font-weight: bold;
+    font-size: 17px;
+  }
+  .trip-route img{
+    flex:1;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .trip-company {
+    display: flex;
+    align-items: center;
+  }
+  
+  .trip-company img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .company-details {
+    display: flex;
+  }
+  .company-des {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .company-name {
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .trip-price {
+    color: red;
+  }
+  
+  .seats-left {
+    color: green;
+  }
+  
+  .trip-rating {
+    font-size: 15px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .trip-rating img {
+    height: 25px;
+    width: 25px;
+  }
+  
+  .continue-button {
+    background-color: #f3f5fe;
+    color: blue;
+    border: none;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+    width: 40%;
+    border-radius: 5px;
+  }
+  .btntiep{
+    width: 60%;
+    display: flex;
+    justify-content: right; //đẩy sang phải
+  }
+  .price-content{
+    display: flex;
+    flex-direction: column;
+  }
+  .price-continue{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .price-content button{
+    text-align: right;
+    flex: 1;
+  }
+}

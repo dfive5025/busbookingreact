@@ -6,6 +6,9 @@
     background-color: white;
     align-items: center;
     padding: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
   .trip-title{
@@ -75,6 +78,7 @@
     border: 1px solid #ccc;
     justify-content: space-between;
     border-radius: 5px;
+    display: flex;
   }
 
   .companyOption input[type="checkbox"], .typeOption input[type="checkbox"]{
@@ -143,6 +147,10 @@
     justify-content: space-between;
     padding: 20px;
     border-top: 1px solid #ccc;
+    background-color: white;
+    position: sticky;
+    bottom: 0;
+    z-index: 1000;
   }
   
   .clearButton, .applyButton {

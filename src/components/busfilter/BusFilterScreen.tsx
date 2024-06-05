@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./bus-filter-screen.css";
+import "./BusFilterScreen.scss";
 import ic_close from "../../assets/svgs/ic_close.svg";
 import bus from "../../assets/svgs/bus.svg";
 import busList from "../../constants/BusCompanyList.ts";
@@ -39,6 +40,12 @@ const BusFilterScreen = () => {
         ? prev.filter((item) => item !== busType)
         : [...prev, busType]
     );
+  };
+  const handledeleteFilter = () => {
+    setSelectedTime([]);
+    setPrices([0, 3000000]);
+    setSelectedBusTypes([]);
+    setSelectedCompanies([]);
   };
 
   return (
@@ -96,64 +103,57 @@ const BusFilterScreen = () => {
         </div>
 
         <div className="filterTitle">Nhà xe</div>
-        {/* <div className="busCompanies"> */}
-        <ul>
+        <div className="busCompanies">
           {busList.map((busList, index) => {
             return (
-              <div className="busCompanies">
-                <label
-                  className={`companyOption ${
-                    selectedCompanies.includes(busList.busName)
-                      ? "selected"
-                      : ""
-                  }`}
-                  key={index}
-                >
-                  <img src={bus} alt="bus" className="imgBus"></img>
-                  {busList.busName}
-                  <input
-                    type="checkbox"
-                    checked={selectedCompanies.includes(busList.busName)}
-                    onChange={() =>
-                      handleCompanyCheckboxChange(busList.busName)
-                    }
-                  />
-                </label>
-              </div>
+              <label
+                className={`companyOption ${
+                  selectedCompanies.includes(busList.busName) ? "selected" : ""
+                }`}
+                key={index}
+              >
+                <img src={bus} alt="bus" className="imgBus"></img>
+                {busList.busName}
+                <input
+                  type="checkbox"
+                  checked={selectedCompanies.includes(busList.busName)}
+                  onChange={() => handleCompanyCheckboxChange(busList.busName)}
+                />
+              </label>
             );
           })}
-        </ul>
+        </div>
 
         <div className="filterTitle">Loại xe</div>
-        <ul>
+        <div className="busTypes">
           {busTypeList.map((busTypeList, index) => {
             return (
-              <div className="busTypes">
-                <label
-                  className={`typeOption ${
-                    selectedBusTypes.includes(busTypeList.seatNum)
-                      ? "selected"
-                      : ""
-                  }`}
-                  key={index}
-                >
-                  {busTypeList.seatNum}
-                  <input
-                    type="checkbox"
-                    checked={selectedBusTypes.includes(busTypeList.seatNum)}
-                    onChange={() =>
-                      handleBusTypeCheckboxChange(busTypeList.seatNum)
-                    }
-                  />
-                </label>
-              </div>
+              <label
+                className={`typeOption ${
+                  selectedBusTypes.includes(busTypeList.seatNum)
+                    ? "selected"
+                    : ""
+                }`}
+                key={index}
+              >
+                {busTypeList.seatNum}
+                <input
+                  type="checkbox"
+                  checked={selectedBusTypes.includes(busTypeList.seatNum)}
+                  onChange={() =>
+                    handleBusTypeCheckboxChange(busTypeList.seatNum)
+                  }
+                />
+              </label>
             );
           })}
-        </ul>
+        </div>
       </div>
 
       <div className="footerButtons">
-        <button className="clearButton">Xóa lọc</button>
+        <button className="clearButton" onClick={handledeleteFilter}>
+          Xóa lọc
+        </button>
         <button className="applyButton">Áp dụng (30)</button>
       </div>
     </div>

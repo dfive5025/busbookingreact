@@ -7,6 +7,9 @@ const busList = [
     },
     {
         busName: "Bảo Phong"
+    },
+    {
+        busName: "Nguyễn đạt"
     }
 ]
 
