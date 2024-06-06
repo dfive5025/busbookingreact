@@ -35,6 +35,10 @@ $bg-element: white;
     margin: 10px 0;
     background-color: $bg-element;
   }
+
+  .line {
+    color: aliceblue;
+  }
   
   .date-picker span {
     padding: 10px;
@@ -51,6 +55,29 @@ $bg-element: white;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    .DepartureTime {
+      width: 30px;
+    }
+    .DepartureTime img{
+      margin-left: 2px;
+      height: 11px;
+      opacity: 0;
+      transform: rotate(-90deg)
+
+    }
+    .selectedDepartureTime{
+      background-color: blue;
+      color: white;
+    }
+    .selectedDepartureTime img{
+      background-color: blue;
+      opacity: 1;
+      color: white;
+    }
+    .selectedDepartureTimeDecrease img{
+      opacity: 1;
+      transform: rotate(-270deg)
+    }
   }
   
   .filter-buttons button {
@@ -89,7 +116,7 @@ $bg-element: white;
   
   .trip-route {
     margin: 5px 0;
-    background-color: #f2f2f2;
+    background-color: #f9f9f9;
     display: flex;
     border: #ccc;
     border-radius: 5px;
@@ -110,16 +137,25 @@ $bg-element: white;
   .trip-company {
     display: flex;
     align-items: center;
+    .imgBus {
+      background: blue;
+      margin-right: 10px;
+      width: 120px; // Chỉnh chiều rộng của hình ảnh
+      height: 120px; // Chỉnh chiều cao của hình ảnh
+    // Bạn có thể thêm các thuộc tính khác như margin nếu cần
+    }
   }
   
-  .trip-company img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-  }
+  // .trip-company img {
+  //   width: 50px;
+  //   height: 50px;
+  //   margin-right: 7px;
+  // }
   
   .company-details {
     display: flex;
+    margin-top: 15px;
+   // background-color: blue;
   }
   .company-des {
     display: flex;
@@ -128,7 +164,11 @@ $bg-element: white;
   
   .company-name {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 13px;
+  }
+  .company-role{
+    color: blue;
+    font-size: 13px;
   }
   
   .trip-price {
@@ -140,10 +180,26 @@ $bg-element: white;
   }
   
   .trip-rating {
+    width: 210px;
     font-size: 15px;
     margin-left: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .rate {
+    display: flex;
+    flex-direction: row;
+    .imgHeart {
+      margin-top: 1px;
+      margin-left: 2px;
+      width: 20px; // Chỉnh chiều rộng của hình ảnh
+      height: 20px; // Chỉnh chiều cao của hình ảnh
+    }
+  }
+  .trip-type{
+    font-size: 13px;
   }
   .trip-rating img {
     height: 25px;
