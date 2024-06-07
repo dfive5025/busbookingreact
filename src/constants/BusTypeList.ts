@@ -1,12 +1,12 @@
 const busTypeList = [
     {
-        seatNum: "Limousine 9 chỗ"
+        seatNum: "Limousine 24 Phòng"
     },
     {
-        seatNum: "Limousine 16 chỗ"
+        seatNum: "Limousine 22 Phòng (Có Toilet)"
     },
     {
-        seatNum: "Limousine 36 chỗ"
+        seatNum: "Giường nằm 34 chỗ"
     }
 ]
 

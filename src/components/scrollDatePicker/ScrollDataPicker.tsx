@@ -13,8 +13,8 @@ interface Day {
 
 const ScrollDataPicker = (props) => {
   let { getListFilterByDay } = props;
-  const [selectedDate, setSelectedDate] = useState(null);
-  // const dateListRef = useRef(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  //const dateListRef = useRef(null);
 
   const getDaysInMonth = (): Day[] => {
     const days: Day[] = [];
@@ -36,7 +36,7 @@ const ScrollDataPicker = (props) => {
   };
 
   useEffect(() => {
-    const today = moment().format("DD");
+    const today = moment().format("DD-MM-Y");
     setSelectedDate(today);
     // if (dateListRef.current) {
     //   const selectedElement = dateListRef.current.querySelector("li.selected");
@@ -64,7 +64,7 @@ const ScrollDataPicker = (props) => {
           {getDaysInMonth().map((day, index) => (
             <li
               key={index}
-              className={selectedDate === day.day ? "selected" : ""}
+              className={selectedDate === day.fullDate ? "selected" : ""}
               onClick={() => handleDateClick(day.fullDate)}
             >
               <span className="day-of-week">{day.dayOfWeek}</span>

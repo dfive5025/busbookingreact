@@ -8,7 +8,7 @@ import ic_heart from "../../assets/svgs/ic_heart.svg";
 import data from "./locchuyenxe.json";
 import { formatNumber } from "../../utils/convertVnd.ts";
 import ScrollDataPicker from "../scrollDatePicker/ScrollDataPicker.tsx";
-// import ReactHorizontalDatePicker from "react-horizontal-strip-datepicker";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface Trip {
   allow_picking_seat: boolean;
@@ -66,6 +66,17 @@ const TripPickScreen = () => {
   const [initialTrips, setInitialTrips] = useState<Trip[]>([]);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  const handledeleteFilter = () => {
+    setSelectedPrice([]);
+    setNumPrice(0);
+    setNumDepatureTime(0);
+    setNumReview(0);
+    setTrips(initialTrips);
+  };
 
   const handlePriceChange = (Price) => {
     setSelectedPrice([]);
@@ -78,42 +89,59 @@ const TripPickScreen = () => {
   };
 
   useEffect(() => {
-    if (selectedPrice.includes("gia ve")) {
-      if (numPrice === 0) {
-        setTrips((prevTrips) => [...prevTrips].sort(compareTripsByPrice));
-        setNumPrice((prev) => prev + 1);
-        console.log(numPrice);
-      } else if (numPrice === 1) {
-        setTrips((prevTrips) =>
-          [...prevTrips].sort(compareTripsByPriceDecrease)
-        );
-        setNumPrice((prev) => prev - 1);
-        console.log(numPrice);
-      }
-    } else if (selectedPrice.includes("danhgia")) {
-      if (numReview === 0) {
-        setTrips((prevTrips) => [...prevTrips].sort(compareTripsByReview));
-        setNumReview((prev) => prev + 1);
-      } else if (numReview === 1) {
-        setTrips((prevTrips) =>
-          [...prevTrips].sort(compareTripsByReviewDecrease)
-        );
-        setNumReview((prev) => prev - 1);
-      }
-    } else if (selectedPrice.includes("giochay")) {
-      if (numDepatureTime === 0) {
-        setTrips((prevTrips) => [...prevTrips].sort(compareTripsByDateTime));
-        setNumDepatureTime((prev) => prev + 1);
-      } else if (numDepatureTime === 1) {
-        setTrips((prevTrips) =>
-          [...prevTrips].sort(compareTripsByDateTimeDecrease)
-        );
-        setNumDepatureTime((prev) => prev - 1);
-      }
-    } else {
-      setTrips(initialTrips);
+    // Đọc dữ liệu từ tệp JSON
+    const coreData = data.json.coreData;
+    if (coreData && coreData.data) {
+      console.log("khoitao", coreData.data.slice(0, 10));
+      setInitialTrips(coreData.data.slice(0, 10));
+      setTrips(coreData.data.slice(0, 10));
     }
-    console.log("btngiave: ", initialTrips);
+  }, []);
+  const onSelectedDay = (d) => {
+    console.log(d);
+  };
+
+  useEffect(() => {
+    if (!isInitialRender) {
+      if (selectedPrice.includes("gia ve")) {
+        if (numPrice === 0) {
+          setTrips((prevTrips) => [...prevTrips].sort(compareTripsByPrice));
+          setNumPrice((prev) => prev + 1);
+          console.log(numPrice);
+        } else if (numPrice === 1) {
+          setTrips((prevTrips) =>
+            [...prevTrips].sort(compareTripsByPriceDecrease)
+          );
+          setNumPrice((prev) => prev - 1);
+          console.log(numPrice);
+        }
+      } else if (selectedPrice.includes("danhgia")) {
+        if (numReview === 0) {
+          setTrips((prevTrips) => [...prevTrips].sort(compareTripsByReview));
+          setNumReview((prev) => prev + 1);
+        } else if (numReview === 1) {
+          setTrips((prevTrips) =>
+            [...prevTrips].sort(compareTripsByReviewDecrease)
+          );
+          setNumReview((prev) => prev - 1);
+        }
+      } else if (selectedPrice.includes("giochay")) {
+        if (numDepatureTime === 0) {
+          setTrips((prevTrips) => [...prevTrips].sort(compareTripsByDateTime));
+          setNumDepatureTime((prev) => prev + 1);
+        } else if (numDepatureTime === 1) {
+          setTrips((prevTrips) =>
+            [...prevTrips].sort(compareTripsByDateTimeDecrease)
+          );
+          setNumDepatureTime((prev) => prev - 1);
+        }
+      } else {
+        setTrips(initialTrips);
+      }
+      console.log("btngiave: ", initialTrips);
+    } else {
+      setIsInitialRender(false);
+    }
   }, [selectedPrice]);
 
   const compareTripsByDateTime = (tripA, tripB) => {
@@ -123,7 +151,7 @@ const TripPickScreen = () => {
     // Tạo đối tượng Date từ chuỗi datetime
     const dateA = new Date(dateTimeA.split("-").reverse().join("-"));
     const dateB = new Date(dateTimeB.split("-").reverse().join("-"));
-    return dateA - dateB;
+    return dateA.getTime() - dateB.getTime();
   };
 
   const compareTripsByDateTimeDecrease = (tripA, tripB) => {
@@ -131,7 +159,7 @@ const TripPickScreen = () => {
     const dateTimeB = `${tripB.departure_date} ${tripB.departure_time}`;
     const dateA = new Date(dateTimeA.split("-").reverse().join("-"));
     const dateB = new Date(dateTimeB.split("-").reverse().join("-"));
-    return dateB - dateA;
+    return dateB.getTime() - dateA.getTime();
   };
   const compareTripsByPrice = (tripA: Trip, tripB: Trip) => {
     return tripA.fare_amount - tripB.fare_amount;
@@ -153,11 +181,7 @@ const TripPickScreen = () => {
     );
   };
 
-  // const sortByDate = () => {
-  //   setTrips(filterTripByDate);
-  // };
-
-  const filterTripByDate = (date: Date) => {
+  const filterTripByDate = (date) => {
     return initialTrips.filter((trip) => {
       return trip.departure_date === date;
     });
@@ -168,22 +192,9 @@ const TripPickScreen = () => {
     const sortedTrips = [...filteredTrips].sort((a, b) => {
       const dateA = new Date(`${a.departure_date} ${a.departure_time}`);
       const dateB = new Date(`${b.departure_date} ${b.departure_time}`);
-      return dateA - dateB;
+      return dateA.getTime() - dateB.getTime();
     });
     setTrips(sortedTrips);
-  };
-
-  useEffect(() => {
-    // Đọc dữ liệu từ tệp JSON
-    const coreData = data.json.coreData;
-    if (coreData && coreData.data) {
-      console.log(coreData.data.slice(0, 10));
-      setInitialTrips(coreData.data.slice(0, 10));
-      setTrips(coreData.data.slice(0, 10));
-    }
-  }, []);
-  const onSelectedDay = (d) => {
-    console.log(d);
   };
 
   const getLocationA = (location) => {
@@ -208,7 +219,7 @@ const TripPickScreen = () => {
     const dateObj1 = new Date(year1, month1 - 1, day1, hour1, minute1);
     const dateObj2 = new Date(year2, month2 - 1, day2, hour2, minute2);
 
-    // Lấy số milliseconds của mỗi ngày
+    // Lấy milliseconds của mỗi ngày
     const time1Ms = dateObj1.getTime();
     const time2Ms = dateObj2.getTime();
 
@@ -221,7 +232,7 @@ const TripPickScreen = () => {
       (timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60)
     );
 
-    // Tạo chuỗi định dạng "11 tiếng 40 phút"
+    // Tạo chuỗi định dạng return
     let formattedTime = "";
     if (hoursDifference > 0) {
       formattedTime += `${hoursDifference} tiếng `;
@@ -231,12 +242,93 @@ const TripPickScreen = () => {
     return formattedTime;
   };
 
+  const onClickFilter = () => {
+    navigate("/");
+  };
+
+  const getFiltersFromUrl = (search) => {
+    const params = new URLSearchParams(search);
+    return {
+      times: params.get("times")?.split(",") || [],
+      companies: params.get("companies")?.split(",") || [],
+      busTypes: params.get("busTypes")?.split(",") || [],
+      minPrice: params.get("minPrice") || 0,
+      maxPrice: params.get("maxPrice") || 3000000,
+    };
+  };
+
+  useEffect(() => {
+    if (location.search !== "") {
+      const coreData = data.json.coreData;
+      if (coreData && coreData.data) {
+        console.log("khoitao", coreData.data.slice(0, 10));
+        setInitialTrips(coreData.data.slice(0, 10));
+        setTrips(coreData.data.slice(0, 10));
+        console.log("kiemtra111", initialTrips);
+        const filters = getFiltersFromUrl(location.search);
+        console.log("kiemtra111", initialTrips);
+        applyFilters(filters);
+      }
+    }
+  }, [location.search]);
+
+  const filterTripsByTime = (trips, timeFilters) => {
+    return trips.filter((trip) => {
+      const tripMinutes = convertTimeToMinutes(trip.departure_time);
+      return timeFilters.some((time) => {
+        const [startTime, endTime] = time.split(" - ");
+        const startMinutes = convertTimeToMinutes(startTime);
+        const endMinutes = convertTimeToMinutes(endTime);
+        return tripMinutes >= startMinutes && tripMinutes <= endMinutes;
+      });
+    });
+  };
+
+  const convertTimeToMinutes = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const applyFilters = (filters) => {
+    const coreData = data.json.coreData;
+    let filteredTrips = coreData.data.slice(0, 10);
+    console.log("kiemtra", filteredTrips);
+    //Filter by time
+    if (filters.times[0] !== "") {
+      filteredTrips = filterTripsByTime(filteredTrips, filters.times);
+    }
+    //Filter by company
+    if (filters.companies[0] !== "") {
+      console.log("companies", filters.companies);
+      filteredTrips = filteredTrips.filter((trip) =>
+        filters.companies.includes(trip.transport_information.name)
+      );
+    }
+    // Filter by bus type
+    if (filters.busTypes[0] !== "") {
+      console.log("busTypes", filters.busTypes);
+      filteredTrips = filteredTrips.filter((trip) =>
+        filters.busTypes.includes(trip.vehicle_name)
+      );
+    }
+    //Filter by price
+    console.log("busPrice", filteredTrips);
+    filteredTrips = filteredTrips.filter(
+      (trip) =>
+        trip.fare_amount >= filters.minPrice &&
+        trip.fare_amount <= filters.maxPrice
+    );
+    setTrips(filteredTrips);
+  };
+
   return (
     <div className="trip-pick-container">
       <div className="trip-header">
         <img src={ic_close} alt="icback"></img>
         <span className="trip-title">Chọn chuyến đi</span>
-        <button className="clear-filter">Xóa lọc</button>
+        <button className="clear-filter" onClick={() => handledeleteFilter()}>
+          Xóa lọc
+        </button>
       </div>
       <ScrollDataPicker getListFilterByDay={sortTripsByDate}></ScrollDataPicker>
 
@@ -268,26 +360,16 @@ const TripPickScreen = () => {
           Đánh giá
           <img src={ic_arrow} alt="ic_arrow"></img>
         </button>
-        <button className="filter-button">
+        <button
+          className="filter-button"
+          onClick={() => {
+            onClickFilter();
+          }}
+        >
           Lọc <img src={ic_filter} alt="icback" className="ic-filter"></img>
         </button>
       </div>
       <div className="trip-list">
-        {/* <div className="trip-item">
-          <div className="trip-time">10:30 20/03/2023</div>
-          <div className="trip-route">Bến xe Gia Lâm - Văn Phòng An Lão</div>
-          <div className="trip-company">
-            <img src="phuong_trang_logo.png" alt="Phuong Trang" />
-            <div className="company-details">
-              <span className="company-name">Phương Trang</span>
-              <span className="trip-type">Limousine ghế ngồi 16 chỗ</span>
-              <span className="trip-price">Từ 190,000 đ</span>
-              <span className="seats-left">Chỉ còn 6 chỗ trống</span>
-            </div>
-            <div className="trip-rating">★ 4.5</div>
-          </div>
-          <button className="continue-button">Tiếp tục</button>
-        </div> */}
         {trips.map((trip) => (
           <div className="trip-item" key={trip.uuid}>
             <div className="trip-time">

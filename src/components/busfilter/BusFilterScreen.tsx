@@ -8,6 +8,7 @@ import busTypeList from "../../constants/BusTypeList.ts";
 import timeList from "../../constants/TimeList.ts";
 import Slider from "react-slider";
 import { formatNumber } from "../../utils/convertVnd.ts";
+import { useNavigate } from "react-router-dom";
 const minPrice = 0;
 const maxPrice = 3000000;
 
@@ -16,6 +17,7 @@ const BusFilterScreen = () => {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedBusTypes, setSelectedBusTypes] = useState<string[]>([]);
   const [prices, setPrices] = useState([minPrice, maxPrice]);
+  const navigate = useNavigate();
 
   const handleTimeCheckboxChange = (timeBus) => {
     setSelectedTime((prev) =>
@@ -46,6 +48,19 @@ const BusFilterScreen = () => {
     setPrices([0, 3000000]);
     setSelectedBusTypes([]);
     setSelectedCompanies([]);
+  };
+
+  const applyFilters = () => {
+    console.log(selectedCompanies);
+    const query = new URLSearchParams({
+      times: selectedTime.join(","),
+      companies: selectedCompanies.join(","),
+      busTypes: selectedBusTypes.join(","),
+      minPrice: prices[0].toString(),
+      maxPrice: prices[1].toString(),
+    }).toString();
+
+    navigate(`/trip?${query}`);
   };
 
   return (
@@ -154,7 +169,9 @@ const BusFilterScreen = () => {
         <button className="clearButton" onClick={handledeleteFilter}>
           Xóa lọc
         </button>
-        <button className="applyButton">Áp dụng (30)</button>
+        <button className="applyButton" onClick={() => applyFilters()}>
+          Áp dụng (30)
+        </button>
       </div>
     </div>
   );

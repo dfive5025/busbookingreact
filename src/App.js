@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<BusFilterScreen />} />
-        <Route path="trip" element={<TripPickScreen />} />
+        <Route path="/trip" element={<TripPickScreen />} />
         <Route path="scroll" element={<ScrollDataPicker />} />
       </Routes>
     </BrowserRouter>
