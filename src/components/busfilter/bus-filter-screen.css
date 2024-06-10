@@ -8,7 +8,7 @@
     padding: 5px;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 4000;
   }
 
   .trip-title{
@@ -31,8 +31,16 @@
     /* justify-content: space-between; */
     align-items: center;
   }
-  
+  .bus-companies-container{
+    padding: 2px;
+    border-radius: 7px;
+    margin: 1px;
+    border: 1px solid #ccc;
+    border-left: 5px;
+    border-right: 7px;
+  }
   .filterTitle {
+    margin-top: 5px;
     flex: 1;
     font-size: 18px;
     font-weight: bold;
@@ -54,8 +62,9 @@
   .busCompanies, .busTypes {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    border: 25px;
+    border-radius: 25px;
+    margin-bottom: 0;
     text-align: left;
   }
   
@@ -75,9 +84,10 @@
     padding: 10px;
     margin-left: 2px;
     background-color: white;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
+    border-bottom: 1px solid #dfd0d0; /* Add this line */
     justify-content: space-between;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     display: flex;
   }
 
@@ -156,20 +166,23 @@
   .clearButton, .applyButton {
     padding: 10px 20px;
     font-size: 16px;
+    border: 5px;
     border-radius: 5px;
-    cursor: pointer;
   }
   
   .clearButton {
-    background-color: #ccc;
+    background-color: #f2f2f2;
+    width: 48%;
   }
   
   .applyButton {
-    background-color: #007bff;
+    background-color: #0867d2;
     color: #fff;
+    width: 50%;
   }
 
 .imgBus {
+  margin-right: 5px;
   max-height: 20px;
   max-width: 20px;
   
@@ -185,7 +198,7 @@
   width: 20px;
   height: 20px;
   cursor: grab;
-  background: #275efe;
+  background: #0867d2;
   border-radius: 50%;
   border: 2px solid #275efe;
   top: -7px
@@ -193,6 +206,5 @@
 
 .track-1 {
   height: 6px;
-  background-color: #275efe;
+  background-color: #0867d2;
 }
-

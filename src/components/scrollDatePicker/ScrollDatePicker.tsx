@@ -4,7 +4,7 @@ import "./ScrollDatePicker.scss";
 import "moment/locale/vi";
 moment.locale("vi");
 
-interface Day {
+interface DayInfo {
   day: string;
   dayOfWeek: string;
   dayMonth: string;
@@ -14,10 +14,11 @@ interface Day {
 const ScrollDataPicker = (props) => {
   let { getListFilterByDay } = props;
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  //const dateListRef = useRef(null);
+  // const dateListRef = useRef(null);
+  const itemRefs = useRef<HTMLLIElement[]>([]);
 
   const getDaysInMonth = (): Day[] => {
-    const days: Day[] = [];
+    const days: DayInfo[] = [];
     const monthStart = moment().startOf("month");
     const monthEnd = moment().endOf("month");
 
@@ -38,6 +39,13 @@ const ScrollDataPicker = (props) => {
   useEffect(() => {
     const today = moment().format("DD-MM-Y");
     setSelectedDate(today);
+    getListFilterByDay(today);
+    // if (selectedDate !== null) {
+    //   itemRefs.current[selectedDate].scrollIntoView({
+    //     behavior: "smooth",
+    //     block: "center",
+    //   });
+    // }
     // if (dateListRef.current) {
     //   const selectedElement = dateListRef.current.querySelector("li.selected");
     //   if (selectedElement) {
@@ -49,33 +57,45 @@ const ScrollDataPicker = (props) => {
     // }
   }, []);
 
-  const handleDateClick = (day) => {
-    setSelectedDate(day);
-    getListFilterByDay(day);
+  useEffect(() => {
+    if (selectedDate !== null) {
+      itemRefs.current[selectedDate].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedDate]);
+
+  const handleDateClick = (dayFull) => {
+    setSelectedDate(dayFull);
+    getListFilterByDay(dayFull);
     //fullDate = day;
     // Xử lý logic khi ngày được chọn
-    console.log("Ngày được chọn:", day);
+    console.log("Ngày được chọn:", dayFull);
   };
 
   return (
-    <div className="datepicker-dateList">
-      <div className="scroll-container">
-        <ul className="date-list">
-          {getDaysInMonth().map((day, index) => (
-            <li
-              key={index}
-              className={selectedDate === day.fullDate ? "selected" : ""}
-              onClick={() => handleDateClick(day.fullDate)}
-            >
-              <span className="day-of-week">{day.dayOfWeek}</span>
-              <span className="day">
-                {day.day}/{day.dayMonth.split("/")[1]}
-              </span>
-            </li>
-          ))}
-        </ul>
+    <>
+      <div className="datepicker-dateList">
+        <div className="scroll-container">
+          <ul className="date-list">
+            {getDaysInMonth().map((day, index) => (
+              <li
+                key={index}
+                ref={(el) => (itemRefs.current[day.fullDate] = el)}
+                className={selectedDate === day.fullDate ? "selected" : ""}
+                onClick={() => handleDateClick(day.fullDate)}
+              >
+                <span className="day-of-week">{day.dayOfWeek}</span>
+                <span className="day">
+                  {day.day}/{day.dayMonth.split("/")[1]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

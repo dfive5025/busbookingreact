@@ -4,5 +4,5 @@ export const formatNumber = (number: number) => {
         currency: 'VND',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
-      }).format(number).replace('đ', '').trim();
+      }).format(number).replace('đ', '').trim().replace(/\./g, ',');
   }

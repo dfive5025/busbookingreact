@@ -1,7 +1,7 @@
 import "./App.css";
 import HomeOK from "./HomeOK.jsx";
 import BusFilterScreen from "./components/busFilter/BusFilterScreen.tsx";
-import ScrollDataPicker from "./components/scrollDatePicker/ScrollDataPicker.tsx";
+import ScrollDataPicker from "./components/scrollDatePicker/ScrollDatePicker.tsx";
 import TripPickScreen from "./components/tripPick/TripPickScreen.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 

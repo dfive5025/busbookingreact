@@ -1,53 +1,53 @@
 .datepicker-dateList {
-    .scroll-container {
-      overflow-x: auto;
-      white-space: nowrap;
-      display: flex;
-      padding: 10px;
-    }
-  
-    .date-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
-  
-    .date-list li {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      margin: 0 5px;
-      background-color: white;
-      color: black;
-      text-align: center;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-  
-    .date-list li:hover,
-    .date-list li.selected {
+  .scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    padding: 5px;
+  }
+
+  .date-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    margin-bottom: 3px;
+  }
+
+  .date-list li {
+    display: inline-block;
+    width: 30%;
+    height: 60%;
+    margin: 0 3px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .date-list li:hover,
+  .date-list li.selected {
     //   background-color: #0056b3;
     background-color: #3b79ff;
     color: white;
-        .day {
-            color: white;
-        }
-    }
-  
-    .day-of-week {
-      display: block;
-      font-size: 22px;
-      font-weight: bold;
-    }
-  
     .day {
-      display: block;
-      font-size: 16px;
-      margin-top: 5px;
-      color: rgb(183, 185, 187);
+      color: white;
     }
   }
-  
+
+  .day-of-week {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .day {
+    display: block;
+    font-size: 16px;
+    margin-top: 2px;
+    color: rgb(183, 185, 187);
+  }
+}

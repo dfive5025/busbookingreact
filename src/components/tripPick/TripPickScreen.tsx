@@ -4,11 +4,15 @@ import "./TripPickScreen.scss";
 import ic_close from "../../assets/svgs/ic_back.svg";
 import ic_filter from "../../assets/svgs/ic_filter_grey.svg";
 import ic_arrow from "../../assets/svgs/ic_arrow.svg";
-import ic_heart from "../../assets/svgs/ic_heart.svg";
+import ic_heart from "../../assets/svgs/ic_heart_selected.svg";
 import data from "./locchuyenxe.json";
 import { formatNumber } from "../../utils/convertVnd.ts";
-import ScrollDataPicker from "../scrollDatePicker/ScrollDataPicker.tsx";
+import strings from "../res/strings.tsx";
+import ScrollDatePicker from "../scrollDatePicker/ScrollDatePicker.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
+import BusFilterScreen from "../busFilter/BusFilterScreen.tsx";
+import LoadingSpiner from "../loadingSpiner/LoadingSpiner.tsx";
+import NotFoundView from "../notFound/NotFoundView.tsx";
 
 interface Trip {
   allow_picking_seat: boolean;
@@ -69,8 +73,11 @@ const TripPickScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isInitialRender, setIsInitialRender] = useState(true);
+  const [isShowBusFilter, setShowBusFilter] = useState(false);
+  const [isShowLoading, setShowLoading] = useState(false);
+  const [isShowNotFound, setShowNotFound] = useState(false);
 
-  const handledeleteFilter = () => {
+  const handleDeleteFilter = () => {
     setSelectedPrice([]);
     setNumPrice(0);
     setNumDepatureTime(0);
@@ -92,9 +99,9 @@ const TripPickScreen = () => {
     // Đọc dữ liệu từ tệp JSON
     const coreData = data.json.coreData;
     if (coreData && coreData.data) {
-      console.log("khoitao", coreData.data.slice(0, 10));
-      setInitialTrips(coreData.data.slice(0, 10));
-      setTrips(coreData.data.slice(0, 10));
+      console.log("khoitao", coreData.data.slice(0, 25));
+      setInitialTrips(coreData.data.slice(0, 25));
+      // setTrips(coreData.data.slice(0, 25));
     }
   }, []);
   const onSelectedDay = (d) => {
@@ -188,13 +195,20 @@ const TripPickScreen = () => {
   };
 
   const sortTripsByDate = (date) => {
+    console.log("vao", "da vao");
+    handleOpenLoadingScreen();
     const filteredTrips = filterTripByDate(date);
     const sortedTrips = [...filteredTrips].sort((a, b) => {
       const dateA = new Date(`${a.departure_date} ${a.departure_time}`);
       const dateB = new Date(`${b.departure_date} ${b.departure_time}`);
       return dateA.getTime() - dateB.getTime();
     });
-    setTrips(sortedTrips);
+    setTimeout(() => {
+      if (sortedTrips.length === 0) {
+        handleOpenNotFoundScreen();
+      }
+      setTrips(sortedTrips);
+    }, 3500);
   };
 
   const getLocationA = (location) => {
@@ -246,32 +260,6 @@ const TripPickScreen = () => {
     navigate("/");
   };
 
-  const getFiltersFromUrl = (search) => {
-    const params = new URLSearchParams(search);
-    return {
-      times: params.get("times")?.split(",") || [],
-      companies: params.get("companies")?.split(",") || [],
-      busTypes: params.get("busTypes")?.split(",") || [],
-      minPrice: params.get("minPrice") || 0,
-      maxPrice: params.get("maxPrice") || 3000000,
-    };
-  };
-
-  useEffect(() => {
-    if (location.search !== "") {
-      const coreData = data.json.coreData;
-      if (coreData && coreData.data) {
-        console.log("khoitao", coreData.data.slice(0, 10));
-        setInitialTrips(coreData.data.slice(0, 10));
-        setTrips(coreData.data.slice(0, 10));
-        console.log("kiemtra111", initialTrips);
-        const filters = getFiltersFromUrl(location.search);
-        console.log("kiemtra111", initialTrips);
-        applyFilters(filters);
-      }
-    }
-  }, [location.search]);
-
   const filterTripsByTime = (trips, timeFilters) => {
     return trips.filter((trip) => {
       const tripMinutes = convertTimeToMinutes(trip.departure_time);
@@ -290,167 +278,228 @@ const TripPickScreen = () => {
   };
 
   const applyFilters = (filters) => {
+    console.log("kiemtra9999", filters);
     const coreData = data.json.coreData;
-    let filteredTrips = coreData.data.slice(0, 10);
-    console.log("kiemtra", filteredTrips);
+    let filteredTrips = coreData.data.slice(0, 25);
+    console.log("dat00000", filteredTrips);
     //Filter by time
-    if (filters.times[0] !== "") {
+    if (filters.times.length > 0) {
       filteredTrips = filterTripsByTime(filteredTrips, filters.times);
     }
     //Filter by company
-    if (filters.companies[0] !== "") {
+    if (filters.companies.length > 0) {
       console.log("companies", filters.companies);
       filteredTrips = filteredTrips.filter((trip) =>
         filters.companies.includes(trip.transport_information.name)
       );
     }
     // Filter by bus type
-    if (filters.busTypes[0] !== "") {
+    if (filters.busTypes.length > 0) {
       console.log("busTypes", filters.busTypes);
       filteredTrips = filteredTrips.filter((trip) =>
         filters.busTypes.includes(trip.vehicle_name)
       );
     }
     //Filter by price
-    console.log("busPrice", filteredTrips);
     filteredTrips = filteredTrips.filter(
       (trip) =>
         trip.fare_amount >= filters.minPrice &&
         trip.fare_amount <= filters.maxPrice
     );
+    // console.log("check", filteredTrips);
     setTrips(filteredTrips);
+  };
+  const handleOpenPopup = () => {
+    setShowBusFilter(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowBusFilter(false);
+  };
+
+  const handleCloseLoadingScreen = () => {
+    setShowLoading(false);
+  };
+
+  const handleOpenLoadingScreen = () => {
+    setShowLoading(true);
+  };
+
+  const handleCloseNotFoundScreen = () => {
+    setShowNotFound(false);
+  };
+
+  const handleOpenNotFoundScreen = () => {
+    setShowNotFound(true);
   };
 
   return (
-    <div className="trip-pick-container">
-      <div className="trip-header">
-        <img src={ic_close} alt="icback"></img>
-        <span className="trip-title">Chọn chuyến đi</span>
-        <button className="clear-filter" onClick={() => handledeleteFilter()}>
-          Xóa lọc
-        </button>
-      </div>
-      <ScrollDataPicker getListFilterByDay={sortTripsByDate}></ScrollDataPicker>
-
-      <div className="filter-buttons">
-        <button
-          onClick={() => handlePriceChange("giochay")}
-          className={`DepartureTime ${
-            selectedPrice.includes("giochay") ? "selectedDepartureTime" : ""
-          } ${numDepatureTime === 1 ? "selectedDepartureTimeDecrease" : ""}`}
-        >
-          Giờ chạy
-          <img src={ic_arrow} alt="ic_arrow"></img>
-        </button>
-        <button
-          onClick={() => handlePriceChange("gia ve")}
-          className={`DepartureTime ${
-            selectedPrice.includes("gia ve") ? "selectedDepartureTime" : ""
-          } ${numPrice === 1 ? "selectedDepartureTimeDecrease" : ""}`}
-        >
-          Giá vé
-          <img src={ic_arrow} alt="ic_arrow"></img>
-        </button>
-        <button
-          onClick={() => handlePriceChange("danhgia")}
-          className={`DepartureTime ${
-            selectedPrice.includes("danhgia") ? "selectedDepartureTime" : ""
-          } ${numReview === 1 ? "selectedDepartureTimeDecrease" : ""}`}
-        >
-          Đánh giá
-          <img src={ic_arrow} alt="ic_arrow"></img>
-        </button>
-        <button
-          className="filter-button"
-          onClick={() => {
-            onClickFilter();
-          }}
-        >
-          Lọc <img src={ic_filter} alt="icback" className="ic-filter"></img>
-        </button>
-      </div>
-      <div className="trip-list">
-        {trips.map((trip) => (
-          <div className="trip-item" key={trip.uuid}>
-            <div className="trip-time">
-              <span className="date">
-                {trip.departure_time} {trip.departure_date}
-              </span>
-              <span className="time-along">
-                {calculateAndFormatTimeDifference(
-                  trip.departure_time,
-                  trip.departure_date,
-                  trip.drop_off_time,
-                  trip.drop_off_date
-                )}
-              </span>
+    <>
+      {isShowLoading && (
+        <div>
+          <LoadingSpiner
+            handleCloseLoadingScreen={handleCloseLoadingScreen}
+          ></LoadingSpiner>
+        </div>
+      )}
+      {isShowBusFilter && (
+        <div className="overlay">
+          <BusFilterScreen
+            showBusFilter={isShowBusFilter}
+            setShowBusFilter={setShowBusFilter}
+            handleClosePopup={handleClosePopup}
+            applyFilters={applyFilters}
+          />
+        </div>
+      )}
+      <div className="trip-pick-container">
+        <div className="trip-header-containers">
+          <div className="trip-header">
+            <img src={ic_close} alt="icback"></img>
+            <div className="title-container">
+              <span className="trip-title">{strings.tripPick}</span>
+              <span className="trip-name">Sàn Gòn - Bảo Lộc</span>
             </div>
-            <div className="trip-route">
-              <span>{getLocationA(trip.name)}</span>
-              <img src={ic_arrow} alt="ic_arrow"></img>
-              <span>{getLocationB(trip.name)}</span>
+            <button className="clear-filter" onClick={handleDeleteFilter}>
+              {strings.filterRemove}
+            </button>
+          </div>
+          <ScrollDatePicker
+            getListFilterByDay={sortTripsByDate}
+          ></ScrollDatePicker>
+          <div className="container-button">
+            <div className="filter-buttons">
+              <button
+                onClick={() => handlePriceChange("giochay")}
+                className={`button-filter ${
+                  selectedPrice.includes("giochay")
+                    ? "selected-button-filter"
+                    : ""
+                } ${
+                  numDepatureTime === 1 ? "selected-button-filter-decrease" : ""
+                }`}
+              >
+                {strings.depatureTime}
+                <img src={ic_arrow} alt="ic_arrow"></img>
+              </button>
+              <button
+                onClick={() => handlePriceChange("gia ve")}
+                className={`button-filter ${
+                  selectedPrice.includes("gia ve")
+                    ? "selected-button-filter"
+                    : ""
+                } ${numPrice === 1 ? "selected-button-filter-decrease" : ""}`}
+              >
+                {strings.price}
+                <img src={ic_arrow} alt="ic_arrow"></img>
+              </button>
+              <button
+                onClick={() => handlePriceChange("danhgia")}
+                className={`button-filter ${
+                  selectedPrice.includes("danhgia")
+                    ? "selected-button-filter"
+                    : ""
+                } ${numReview === 1 ? "selected-button-filter-decrease" : ""}`}
+              >
+                {strings.review}
+                <img src={ic_arrow} alt="ic_arrow"></img>
+              </button>
             </div>
-            <div className="trip-company">
-              <img
-                src={trip.transport_information.image_url}
-                alt="bus"
-                className="imgBus"
-              ></img>
-              <div className="company-details">
-                <div className="company-des">
-                  <span className="company-name">
-                    {trip.transport_information.name}
+            <button className="filter-button" onClick={handleOpenPopup}>
+              {strings.filter}
+              <img src={ic_filter} alt="icback" className="ic-filter"></img>
+            </button>
+          </div>
+        </div>
+        {isShowNotFound && (
+          <div>
+            <NotFoundView
+              handleCloseNotFoundScreen={handleCloseNotFoundScreen}
+            ></NotFoundView>
+          </div>
+        )}
+        <div className="trip-list-container">
+          <div className="trip-list">
+            {trips.map((trip) => (
+              <div className="trip-item" key={trip.uuid}>
+                <div className="trip-time">
+                  <span className="departure-date">
+                    {trip.departure_time} {trip.departure_date}
                   </span>
-                  <span className="company-role">Chi tiết quy định</span>
+                  <span className="time-along">
+                    {calculateAndFormatTimeDifference(
+                      trip.departure_time,
+                      trip.departure_date,
+                      trip.drop_off_time,
+                      trip.drop_off_date
+                    )}
+                  </span>
                 </div>
-                <div className="trip-rating">
-                  <span className="rate">
-                    ★ {trip.transport_information.rating}
+                <div className="trip-route">
+                  <span className="name-location-A">
+                    {getLocationA(trip.name)}
+                  </span>
+                  <img src={ic_arrow} alt="ic_arrow"></img>
+                  <span className="name-location-B">
+                    {getLocationB(trip.name)}
+                  </span>
+                </div>
+                <div className="trip-company">
+                  <div className="bus-image">
                     <img
-                      src={ic_heart}
-                      alt="ic_heart"
-                      className="imgHeart"
+                      src={trip.transport_information.image_url}
+                      alt="bus"
+                      className="img"
                     ></img>
-                  </span>
-                  <span className="trip-type">{trip.vehicle_name}</span>
+                  </div>
+                  <div className="company-details">
+                    <div className="company-des">
+                      <span className="company-name">
+                        {trip.transport_information.name}
+                      </span>
+                      <span className="company-role">
+                        {strings.regulatoryDetails}
+                      </span>
+                    </div>
+                    <div className="trip-rating">
+                      <span className="rate">
+                        ★ {trip.transport_information.rating}
+                        <img
+                          src={ic_heart}
+                          alt="ic_heart"
+                          className="imgHeart"
+                        ></img>
+                      </span>
+                      <span className="trip-type">{trip.vehicle_name}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="line">
+                  <h4>----------------------------------------------------</h4>
+                </div>
+                <div className="price-continue">
+                  <div className="price-content">
+                    <span className="trip-price">
+                      {strings.from}{" "}
+                      <span className="amout-text">
+                        {formatNumber(trip.discount_amount)}
+                      </span>
+                    </span>
+                    <span className="seats-left">
+                      {strings.only} {trip.available_seat}{" "}
+                      {strings.seatAvailable}
+                    </span>
+                  </div>
+                  <div className="btntiep">
+                    <button className="continue-button">Tiếp tục</button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="line">
-              <h4>----------------------------------------------------</h4>
-            </div>
-            <div className="price-continue">
-              <div className="price-content">
-                <span className="trip-price">
-                  Từ {formatNumber(trip.discount_amount)}
-                </span>
-                <span className="seats-left">
-                  Chỉ còn {trip.available_seat} chỗ trống
-                </span>
-              </div>
-              <div className="btntiep">
-                <button className="continue-button">Tiếp tục</button>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-        {/* <div className="trip-item">
-          <div className="trip-time">10:30 20/03/2023</div>
-          <div className="trip-route">250 Đức Giang - 200 An Lão</div>
-          <div className="trip-company">
-            <img src="van_minh_logo.png" alt="Van Minh" />
-            <div className="company-details">
-              <span className="company-name">Văn Minh</span>
-              <span className="trip-type">Limousine giường nằm 38 chỗ</span>
-              <span className="trip-price">Từ 200,000 đ</span>
-              <span className="seats-left">Chỉ còn 6 chỗ trống</span>
-            </div>
-            <div className="trip-rating">★ 4</div>
-          </div>
-          <button className="continue-button">Tiếp tục</button>
-        </div> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
